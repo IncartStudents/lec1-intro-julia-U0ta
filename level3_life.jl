@@ -26,7 +26,7 @@ end
 function step!(state::Life)
     curr = state.current_frame
     next = state.next_frame
-
+    next .= curr
     #=
     TODO: вместо случайного шума
     реализовать один шаг алгоритма "Игра жизнь"
@@ -36,11 +36,11 @@ function step!(state::Life)
             neighbors = count_neighbors(curr, i, j)
             if curr[i,j] == 1
                 if neighbors < 2 || neighbors > 3 
-                    curr[i,j] = 0 
+                    next[i,j] = 0 
                 end
             else
                 if neighbors == 3
-                    curr[i,j] = 1
+                    next[i,j] = 1
                 end
             end
         end
@@ -52,7 +52,7 @@ function step!(state::Life)
     # 10
     # julia> mod1(31, 30)
     # 1
-
+    curr .= next
     return nothing
 end
 
@@ -65,10 +65,7 @@ function (@main)(ARGS)
     init[15,16] = 1
     init[15,14] = 1
     init[14,15] = 1
-    init[16,14] = 1
-    init[16,15] = 1
-    init[16,16] = 1
-    init[15,17] = 1 #заполнил вручную ради забавы и красивого роста "популяции"
+    init[16,14] = 1 #заполнил вручную ради забавы и красивого роста "популяции"
     game = Life(init, zeros(n, m))
 
     anim = @animate for time = 1:100
